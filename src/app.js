@@ -14,24 +14,16 @@ let state = {
     circles: []
 };
 
-// DOM elements
-const clearBtn = document.getElementById('clearBtn');
-const status = document.getElementById('status');
-const pointCount = document.getElementById('pointCount');
-const lineCount = document.getElementById('lineCount');
-const circleCount = document.getElementById('circleCount');
+// DOM elements (removed - no longer needed)
 
-// Update statistics display
+// Update statistics display (removed - panel deleted)
 function updateStats() {
-    pointCount.textContent = state.points.length;
-    lineCount.textContent = state.lines.length;
-    circleCount.textContent = state.circles.length;
+    // Statistics panel removed
 }
 
-// Update status message
+// Update status message (removed - panel deleted)
 function setStatus(message, type = 'inactive') {
-    status.textContent = message;
-    status.className = 'status ' + (type !== 'inactive' ? type : 'inactive');
+    // Status panel removed
 }
 
 // Create a new point
@@ -103,23 +95,7 @@ function findNearbyPoint(x, y, threshold = 0.3) {
     return null;
 }
 
-// Button event listeners
-clearBtn.addEventListener('click', () => {
-    if (confirm('Clear all objects? This cannot be undone.')) {
-        // Remove all objects from board
-        state.points.forEach(p => board.removeObject(p));
-        state.lines.forEach(l => board.removeObject(l));
-        state.circles.forEach(c => board.removeObject(c));
-        
-        state.points = [];
-        state.lines = [];
-        state.circles = [];
-        
-        board.update();
-        updateStats();
-        setStatus('All objects cleared', 'inactive');
-    }
-});
+
 
 // Command Palette
 const commandInput = document.getElementById('commandInput');
@@ -217,5 +193,4 @@ commandInput.addEventListener('keydown', (evt) => {
 });
 
 // Initialize
-updateStats();
-setStatus('Ready', 'inactive');
+console.log('Euclid Geo AI - Ready');
