@@ -9,18 +9,12 @@ const board = JXG.JSXGraph.initBoard('jxgboard', {
 
 // State management
 let state = {
-    mode: null,
-    selectedPoints: [],
     points: [],
     lines: [],
     circles: []
 };
 
 // DOM elements
-const pointBtn = document.getElementById('pointBtn');
-const lineBtn = document.getElementById('lineBtn');
-const circleBtn = document.getElementById('circleBtn');
-const selectBtn = document.getElementById('selectBtn');
 const clearBtn = document.getElementById('clearBtn');
 const status = document.getElementById('status');
 const pointCount = document.getElementById('pointCount');
@@ -32,38 +26,6 @@ function updateStats() {
     pointCount.textContent = state.points.length;
     lineCount.textContent = state.lines.length;
     circleCount.textContent = state.circles.length;
-}
-
-// Set mode and update UI
-function setMode(mode) {
-    state.mode = mode;
-    state.selectedPoints = [];
-    
-    // Update button states
-    [pointBtn, lineBtn, circleBtn, selectBtn].forEach(btn => {
-        btn.classList.remove('active');
-    });
-    
-    switch(mode) {
-        case 'point':
-            pointBtn.classList.add('active');
-            setStatus('Click on the canvas to create a point', 'inactive');
-            break;
-        case 'line':
-            lineBtn.classList.add('active');
-            setStatus('Select 2 points to draw a line', 'inactive');
-            break;
-        case 'circle':
-            circleBtn.classList.add('active');
-            setStatus('Select center point, then point on circumference', 'inactive');
-            break;
-        case 'select':
-            selectBtn.classList.add('active');
-            setStatus('Select mode active', 'inactive');
-            break;
-        default:
-            setStatus('Ready', 'inactive');
-    }
 }
 
 // Update status message
@@ -119,48 +81,13 @@ function drawCircle(center, pointOnCircumference) {
     setStatus('Circle created', 'inactive');
 }
 
-// Board click handler
+// Board click handler - creates points on click
 board.on('click', function(evt) {
-    if (state.mode === null) return;
-    
     const coords = board.getUsrCoordsOfMouse(evt);
     const x = coords[0];
     const y = coords[1];
-    
-    if (state.mode === 'point') {
-        createPoint(x, y);
-        setStatus('Point created', 'inactive');
-    } 
-    else if (state.mode === 'line') {
-        // Find nearest point to click
-        const nearbyPoint = findNearbyPoint(x, y);
-        if (nearbyPoint) {
-            state.selectedPoints.push(nearbyPoint);
-            if (state.selectedPoints.length === 2) {
-                drawLine(state.selectedPoints[0], state.selectedPoints[1]);
-                state.selectedPoints = [];
-            } else {
-                setStatus(`Point 1 of 2 selected (${state.selectedPoints.length})`, 'inactive');
-            }
-        } else {
-            setStatus('Click on a point! No point nearby.', 'error');
-        }
-    }
-    else if (state.mode === 'circle') {
-        // Find nearest point to click
-        const nearbyPoint = findNearbyPoint(x, y);
-        if (nearbyPoint) {
-            state.selectedPoints.push(nearbyPoint);
-            if (state.selectedPoints.length === 1) {
-                setStatus('Center selected. Click point on circumference.', 'inactive');
-            } else if (state.selectedPoints.length === 2) {
-                drawCircle(state.selectedPoints[0], state.selectedPoints[1]);
-                state.selectedPoints = [];
-            }
-        } else {
-            setStatus('Click on a point! No point nearby.', 'error');
-        }
-    }
+    createPoint(x, y);
+    setStatus('Point created', 'inactive');
 });
 
 // Find nearest point to coordinates
@@ -177,11 +104,6 @@ function findNearbyPoint(x, y, threshold = 0.3) {
 }
 
 // Button event listeners
-pointBtn.addEventListener('click', () => setMode('point'));
-lineBtn.addEventListener('click', () => setMode('line'));
-circleBtn.addEventListener('click', () => setMode('circle'));
-selectBtn.addEventListener('click', () => setMode('select'));
-
 clearBtn.addEventListener('click', () => {
     if (confirm('Clear all objects? This cannot be undone.')) {
         // Remove all objects from board
@@ -192,8 +114,6 @@ clearBtn.addEventListener('click', () => {
         state.points = [];
         state.lines = [];
         state.circles = [];
-        state.selectedPoints = [];
-        state.mode = null;
         
         board.update();
         updateStats();
