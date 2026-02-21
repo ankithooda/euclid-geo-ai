@@ -202,32 +202,8 @@ clearBtn.addEventListener('click', () => {
 });
 
 // Command Palette
-const commandPaletteOverlay = document.getElementById('commandPaletteOverlay');
 const commandInput = document.getElementById('commandInput');
 const commandOutput = document.getElementById('commandOutput');
-
-// Toggle command palette with Ctrl+K or Cmd+K
-document.addEventListener('keydown', (evt) => {
-    if ((evt.ctrlKey || evt.metaKey) && evt.key === 'k') {
-        evt.preventDefault();
-        toggleCommandPalette();
-    }
-    if (evt.key === 'Escape' && !commandPaletteOverlay.classList.contains('hidden')) {
-        closeCommandPalette();
-    }
-});
-
-function toggleCommandPalette() {
-    commandPaletteOverlay.classList.toggle('hidden');
-    if (!commandPaletteOverlay.classList.contains('hidden')) {
-        commandInput.focus();
-    }
-}
-
-function closeCommandPalette() {
-    commandPaletteOverlay.classList.add('hidden');
-    commandInput.value = '';
-}
 
 // Helper to find point by label
 function getPointByLabel(label) {
@@ -309,7 +285,7 @@ Example:
 
 function setCommandOutput(text, type = 'info') {
     commandOutput.textContent = text;
-    commandOutput.className = 'command-output ' + type;
+    commandOutput.className = 'command-output-bottom ' + type;
 }
 
 // Command input handler
@@ -317,13 +293,6 @@ commandInput.addEventListener('keydown', (evt) => {
     if (evt.key === 'Enter') {
         executeCommand(commandInput.value);
         commandInput.value = '';
-    }
-});
-
-// Close palette when clicking outside
-commandPaletteOverlay.addEventListener('click', (evt) => {
-    if (evt.target === commandPaletteOverlay) {
-        closeCommandPalette();
     }
 });
 
