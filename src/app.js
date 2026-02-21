@@ -105,6 +105,7 @@ function drawLine(point1, point2) {
 
 // Draw circle with center and point on circumference
 function drawCircle(center, pointOnCircumference) {
+    console.log(center, pointOnCircumference);
     const circle = board.create('circle', [center, pointOnCircumference], {
         color: '#4caf50',
         strokeWidth: 2,
@@ -197,6 +198,132 @@ clearBtn.addEventListener('click', () => {
         board.update();
         updateStats();
         setStatus('All objects cleared', 'inactive');
+    }
+});
+
+// Command Palette
+const commandPaletteOverlay = document.getElementById('commandPaletteOverlay');
+const commandInput = document.getElementById('commandInput');
+const commandOutput = document.getElementById('commandOutput');
+
+// Toggle command palette with Ctrl+K or Cmd+K
+document.addEventListener('keydown', (evt) => {
+    if ((evt.ctrlKey || evt.metaKey) && evt.key === 'k') {
+        evt.preventDefault();
+        toggleCommandPalette();
+    }
+    if (evt.key === 'Escape' && !commandPaletteOverlay.classList.contains('hidden')) {
+        closeCommandPalette();
+    }
+});
+
+function toggleCommandPalette() {
+    commandPaletteOverlay.classList.toggle('hidden');
+    if (!commandPaletteOverlay.classList.contains('hidden')) {
+        commandInput.focus();
+    }
+}
+
+function closeCommandPalette() {
+    commandPaletteOverlay.classList.add('hidden');
+    commandInput.value = '';
+}
+
+// Helper to find point by label
+function getPointByLabel(label) {
+    return state.points.find(p => p.name === label);
+}
+
+// Execute command
+function executeCommand(input) {
+    const parts = input.trim().split(/\s+/);
+    const command = parts[0]?.toLowerCase();
+    
+    if (!command) {
+        setCommandOutput('', 'info');
+        return;
+    }
+    
+    if (command === 'help') {
+        const helpText = `
+Available Commands:
+  line pointA pointB    - Draw line between two labeled points
+  circle pointA pointB  - Draw circle (pointA = center, pointB = on circumference)
+  help                  - Show this message
+
+Example:
+  line P1 P2
+  circle P1 P3`;
+        setCommandOutput(helpText, 'info');
+        return;
+    }
+    
+    if (command === 'line') {
+        if (parts.length < 3) {
+            setCommandOutput('Error: line requires 2 point labels\nUsage: line pointA pointB', 'error');
+            return;
+        }
+        
+        const pointA = getPointByLabel(parts[1]);
+        const pointB = getPointByLabel(parts[2]);
+        
+        if (!pointA) {
+            setCommandOutput(`Error: Point "${parts[1]}" not found`, 'error');
+            return;
+        }
+        if (!pointB) {
+            setCommandOutput(`Error: Point "${parts[2]}" not found`, 'error');
+            return;
+        }
+        
+        drawLine(pointA, pointB);
+        setCommandOutput(`✓ Line created between ${parts[1]} and ${parts[2]}`, 'success');
+        return;
+    }
+    
+    if (command === 'circle') {
+        if (parts.length < 3) {
+            setCommandOutput('Error: circle requires 2 point labels\nUsage: circle pointA pointB', 'error');
+            return;
+        }
+        
+        const center = getPointByLabel(parts[1]);
+        const pointOnCirc = getPointByLabel(parts[2]);
+        
+        if (!center) {
+            setCommandOutput(`Error: Point "${parts[1]}" not found`, 'error');
+            return;
+        }
+        if (!pointOnCirc) {
+            setCommandOutput(`Error: Point "${parts[2]}" not found`, 'error');
+            return;
+        }
+        
+        drawCircle(center, pointOnCirc);
+        setCommandOutput(`✓ Circle created (center: ${parts[1]}, circumference: ${parts[2]})`, 'success');
+        return;
+    }
+    
+    setCommandOutput(`Error: Unknown command "${command}"\nType "help" for available commands`, 'error');
+}
+
+function setCommandOutput(text, type = 'info') {
+    commandOutput.textContent = text;
+    commandOutput.className = 'command-output ' + type;
+}
+
+// Command input handler
+commandInput.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Enter') {
+        executeCommand(commandInput.value);
+        commandInput.value = '';
+    }
+});
+
+// Close palette when clicking outside
+commandPaletteOverlay.addEventListener('click', (evt) => {
+    if (evt.target === commandPaletteOverlay) {
+        closeCommandPalette();
     }
 });
 
