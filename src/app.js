@@ -58,6 +58,19 @@ function drawLine(point1, point2) {
     setStatus('Line created', 'inactive');
 }
 
+// Draw line segment between two points (not extending beyond them)
+function drawSegment(point1, point2) {
+    const segment = board.create('segment', [point1, point2], {
+        color: '#ff9800',
+        strokeWidth: 2,
+        fixed: true
+    });
+    
+    state.lines.push(segment);
+    updateStats();
+    setStatus('Segment created', 'inactive');
+}
+
 // Draw circle with center and point on circumference
 function drawCircle(center, pointOnCircumference) {
     console.log(center, pointOnCircumference);
@@ -119,12 +132,14 @@ function executeCommand(input) {
     if (command === 'help') {
         const helpText = `
 Available Commands:
-  line pointA pointB    - Draw line between two labeled points
-  circle pointA pointB  - Draw circle (pointA = center, pointB = on circumference)
-  help                  - Show this message
+  line pointA pointB     - Draw infinite line through two points
+  segment pointA pointB  - Draw line segment between two points
+  circle pointA pointB   - Draw circle (pointA = center, pointB = on circumference)
+  help                   - Show this message
 
 Example:
   line P1 P2
+  segment P1 P2
   circle P1 P3`;
         setCommandOutput(helpText, 'info');
         return;
@@ -150,6 +165,29 @@ Example:
         
         drawLine(pointA, pointB);
         setCommandOutput(`✓ Line created between ${parts[1]} and ${parts[2]}`, 'success');
+        return;
+    }
+    
+    if (command === 'segment') {
+        if (parts.length < 3) {
+            setCommandOutput('Error: segment requires 2 point labels\nUsage: segment pointA pointB', 'error');
+            return;
+        }
+        
+        const pointA = getPointByLabel(parts[1]);
+        const pointB = getPointByLabel(parts[2]);
+        
+        if (!pointA) {
+            setCommandOutput(`Error: Point "${parts[1]}" not found`, 'error');
+            return;
+        }
+        if (!pointB) {
+            setCommandOutput(`Error: Point "${parts[2]}" not found`, 'error');
+            return;
+        }
+        
+        drawSegment(pointA, pointB);
+        setCommandOutput(`✓ Segment created between ${parts[1]} and ${parts[2]}`, 'success');
         return;
     }
     
