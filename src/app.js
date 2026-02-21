@@ -100,7 +100,6 @@ function findNearbyPoint(x, y, threshold = 0.3) {
 
 // Command Palette
 const commandInput = document.getElementById('commandInput');
-const commandOutput = document.getElementById('commandOutput');
 
 // Helper to find point by label
 function getPointByLabel(label) {
@@ -181,8 +180,7 @@ Example:
 }
 
 function setCommandOutput(text, type = 'info') {
-    commandOutput.textContent = text;
-    commandOutput.className = 'command-output-bottom ' + type;
+    // Output display removed
 }
 
 // Command input handler

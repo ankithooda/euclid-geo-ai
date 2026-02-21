@@ -29,24 +29,6 @@
             flex-direction: column;
         }
         
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-        
-        .header h1 {
-            margin-bottom: 5px;
-            font-size: 24px;
-        }
-        
-        .header p {
-            font-size: 12px;
-            opacity: 0.9;
-            margin: 0;
-        }
         
         .content {
             padding: 0;
@@ -71,21 +53,19 @@
         .command-palette-bottom {
             border-top: 2px solid #333;
             background: white;
-            display: flex;
-            flex-direction: column;
-            height: 200px;
             flex-shrink: 0;
         }
         
         .command-input-bottom {
+            width: 100%;
             padding: 16px 20px;
             border: none;
             outline: none;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
             font-size: 18px;
             background: white;
-            border-bottom: 2px solid #e0e0e0;
             font-weight: 500;
+            box-sizing: border-box;
         }
         
         .command-input-bottom::placeholder {
@@ -94,33 +74,6 @@
         
         .command-input-bottom:focus {
             background: #f9f9f9;
-            border-bottom-color: #667eea;
-        }
-        
-        .command-output-bottom {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px 20px;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 16px;
-            background: #fafafa;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        .command-output-bottom.success {
-            color: #2e7d32;
-            background: #e8f5e9;
-        }
-        
-        .command-output-bottom.error {
-            color: #c62828;
-            background: #ffebee;
-        }
-        
-        .command-output-bottom.info {
-            color: #1565c0;
-            background: #e3f2fd;
         }
         
         
@@ -204,11 +157,6 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Euclid Geo AI</h1>
-            <p>Interactive 2D Geometry - Create Points, Lines & Circles</p>
-        </div>
-        
         <div class="content">
             <div class="board-container">
                 <div id="jxgboard"></div>
@@ -220,7 +168,6 @@
                         placeholder="Command: line P1 P2 | circle P1 P2 | help"
                         autocomplete="off"
                     >
-                    <div id="commandOutput" class="command-output-bottom"></div>
                 </div>
             </div>
         </div>
