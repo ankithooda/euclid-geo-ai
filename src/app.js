@@ -1,8 +1,9 @@
 // Initialize JSXGraph board
 const board = JXG.JSXGraph.initBoard('jxgboard', {
-    boundingbox: [-10, 10, 10, -10],
-    axis: true,
+    boundingbox: [-1, 1, 1, -1],
+    axis: false,
     grid: true,
+    keepaspectratio: true,
     showCopyright: false,
     showNavigation: false
 });
