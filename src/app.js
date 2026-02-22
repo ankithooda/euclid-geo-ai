@@ -15,17 +15,7 @@ let state = {
     circles: []
 };
 
-// DOM elements (removed - no longer needed)
 
-// Update statistics display (removed - panel deleted)
-function updateStats() {
-    // Statistics panel removed
-}
-
-// Update status message (removed - panel deleted)
-function setStatus(message, type = 'inactive') {
-    // Status panel removed
-}
 
 // Create a new point
 function createPoint(x, y) {
@@ -41,7 +31,6 @@ function createPoint(x, y) {
     });
     
     state.points.push(point);
-    updateStats();
     return point;
 }
 
@@ -54,8 +43,6 @@ function drawLine(point1, point2) {
     });
     
     state.lines.push(line);
-    updateStats();
-    setStatus('Line created', 'inactive');
 }
 
 // Draw line segment between two points (not extending beyond them)
@@ -67,13 +54,10 @@ function drawSegment(point1, point2) {
     });
     
     state.lines.push(segment);
-    updateStats();
-    setStatus('Segment created', 'inactive');
 }
 
 // Draw circle with center and point on circumference
 function drawCircle(center, pointOnCircumference) {
-    console.log(center, pointOnCircumference);
     const circle = board.create('circle', [center, pointOnCircumference], {
         color: '#4caf50',
         strokeWidth: 2,
@@ -83,8 +67,6 @@ function drawCircle(center, pointOnCircumference) {
     });
     
     state.circles.push(circle);
-    updateStats();
-    setStatus('Circle created', 'inactive');
 }
 
 // Board click handler - creates points on click
@@ -93,7 +75,6 @@ board.on('click', function(evt) {
     const x = coords[0];
     const y = coords[1];
     createPoint(x, y);
-    setStatus('Point created', 'inactive');
 });
 
 // Find nearest point to coordinates
